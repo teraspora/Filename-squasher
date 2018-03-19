@@ -5,12 +5,11 @@
 
 (ns file-renamer.core
   (:gen-class)
-  (:require [clojure.string :as str]))
+  (:require [clojure.string :as str]
+  			[clojure.pprint :as pp]
+			[clojure.java.io :refer :all]))
 
 (import '[java.nio.file])
-
-(use '[clojure.java.io])
-(use '[clojure.pprint])
 
 (defn traverse-dir 
 	"Return a seq of pathnames of directories and files in the given directory"
@@ -25,27 +24,22 @@
 (defn despace-filenames
     "Map a fn to rename a file over all files and dirs in the given directory"
     [direc separator]
-    ; need to rename directories deepest first, so sort them;
-    (let [folist      (reverse (sort-by  #(-> % as-file .toPath .getNameCount) (vec (traverse-dir direc))))
-    	  dlist 	  (filter #(.isDirectory (as-file %)) folist)]
-  	  ;(pprint dlist)
-  	  (pprint "Renaming directories...")
-      (doseq [dir dlist] 
-      		(let [d (as-file dir)
-      			  dn (.getName d)
-      			  p (.getParent d)]
-      			  (when (str/includes? dn " ") (.renameTo d (as-file (java.io.File. p (replace-spaces dn separator)))))                   )))
+    (pp/pprint "Getting list of directories...")
+    ; need to rename directories deepest first to obviate problems with changed references, so sort them;
+    (let [dir-list 	  (filter #(.isDirectory (as-file %)) (reverse (sort-by  #(-> % as-file .toPath .getNameCount) (vec (traverse-dir direc)))))]
+	  (pp/pprint "Renaming directories...")
+      (doseq [dir dir-list] 
+  		(let [d  (as-file dir)
+	  		  dname (.getName d)]
+	  	  (when (str/includes? dname " ") (.renameTo d (as-file (java.io.File. (.getParent d) (replace-spaces dname separator))))))))
 
     ; now rename files; order unimportant
-    (let [flist       (filter #(.isFile (as-file %)) (vec (traverse-dir direc)))
-  	      new-flist   (vec (map #(replace-spaces % separator) flist))]
-  	  ; (pprint flist)
-     ;  (pprint new-flist)
-      (pprint "Renaming files...")
-      (doseq [[f1 f2] (map list flist new-flist)] (when-not (= f1 f2) (.renameTo (as-file f1) (as-file f2))))))
+    (let [file-list       (filter #(.isFile (as-file %)) (vec (traverse-dir direc)))
+  	      new-file-list   (vec (map #(replace-spaces % separator) file-list))]
+  	  (pp/pprint "Renaming files...")
+      (doseq [[f1 f2] (map list file-list new-file-list)] (when-not (= f1 f2) (.renameTo (as-file f1) (as-file f2))))))
 
 (defn -main
-    [& [direc separator]]
+    [direc separator]
 	(despace-filenames direc separator)
-	(pprint "Done!"))
-
+	(pp/pprint "Done!"))
