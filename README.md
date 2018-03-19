@@ -14,11 +14,12 @@ Use this short program to replace whitespace in names of all directories and fil
 REPL - `(require 'file-renamer.core)
        (-main <base directory <new separator string>)`
 
-Shell/Leiningen - `lein run <base directory <new separator string>`
+Shell/Leiningen - `lein run <base directory> <new separator string>`
 
 ## Examples
 
 `lein run "/home/fred/test/" ""`
+
 `lein run "/music/artists/" "-"`
 
 ## License
