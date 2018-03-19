@@ -4,9 +4,7 @@
 ;;;; Use:  Replaces whitespace in names of all directories and files in the given directory with the given separator.
 
 (ns file-renamer.core
-  (:gen-class)
   (:require [clojure.string :as str]
-  			[clojure.pprint :as pp]
 			[clojure.java.io :refer :all]))
 
 (import '[java.nio.file])
@@ -43,6 +41,7 @@
 
 (defn -main
     [^String direc ^String separator]
+    (when-not (.isDirectory (as-file direc)) (do (println (str direc " is not a directory; exiting...")) (System/exit 0)))
     (println "Do you really want to replace all blocks of whitespace in all directories and files in ")
     (println  (str direc " with the string '" separator "'? - Y/n")) 
     (if (= (read-line) "Y") (despace-filenames direc separator) (System/exit 0))
