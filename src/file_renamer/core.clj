@@ -22,9 +22,11 @@
     (str/replace s1 #"\s+" s2))
 
 (defn despace-filenames
-    "Map a fn to rename a file over all files and dirs in the given directory"
+    "Map a fn to rename a file (by replacing all substrings of whitespace in the name with the given separator) 
+    over all files and dirs in the given directory"
     [direc separator]
     (pp/pprint "Getting list of directories...")
+
     ; need to rename directories deepest first to obviate problems with changed references, so sort them;
     (let [dir-list 	  (filter #(.isDirectory (as-file %)) (reverse (sort-by  #(-> % as-file .toPath .getNameCount) (vec (traverse-dir direc)))))]
 	  (pp/pprint "Renaming directories...")
@@ -33,7 +35,7 @@
 	  		  dname (.getName d)]
 	  	  (when (str/includes? dname " ") (.renameTo d (as-file (java.io.File. (.getParent d) (replace-spaces dname separator))))))))
 
-    ; now rename files; order unimportant
+    ; now get an updated file list, then rename files; order unimportant
     (let [file-list       (filter #(.isFile (as-file %)) (vec (traverse-dir direc)))
   	      new-file-list   (vec (map #(replace-spaces % separator) file-list))]
   	  (pp/pprint "Renaming files...")
