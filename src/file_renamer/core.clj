@@ -4,6 +4,7 @@
 ;;;; Use:  Replaces whitespace in names of all directories and files in the given directory with the given separator.
 
 (ns file-renamer.core
+  (:gen-class)
   (:require [clojure.string :as str]
 			[clojure.java.io :refer :all]))
 

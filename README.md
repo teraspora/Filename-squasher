@@ -1,36 +1,28 @@
-# file-renamer
+# Filename-squasher
 
-FIXME: description
+* Do you have loads of music CDs on your hard disk, where the file and directory names have been automatically generated from online databases?
 
-## Installation
+* Have the filenames got spaces between the words?
 
-Download from http://example.com/FIXME.
+* Do you find this annoying when you have to quote them on the command line, for example?
+
+### If [:yes :yes :yes]...
+Use this short program to replace whitespace in names of all directories and files in the given directory with a different separator.
 
 ## Usage
 
-FIXME: explanation
+REPL - `(require 'file-renamer.core)
+       (-main <base directory <new separator string>)`
 
-    $ java -jar file-renamer-0.1.0-standalone.jar [args]
-
-## Options
-
-FIXME: listing of options this app accepts.
+Shell/Leiningen - `lein run <base directory <new separator string>`
 
 ## Examples
 
-...
-
-### Bugs
-
-...
-
-### Any Other Sections
-### That You Think
-### Might be Useful
+`lein run "/home/fred/test/" ""`
+`lein run "/music/artists/" "-"`
 
 ## License
 
-Copyright © 2018 FIXME
+Copyright © 2017 John Lynch
 
-Distributed under the Eclipse Public License either version 1.0 or (at
-your option) any later version.
+Distributed under the Eclipse Public License either version 1.0 or whatever.
