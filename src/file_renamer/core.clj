@@ -33,7 +33,7 @@
       (doseq [dir dir-list] 
   		(let [d  (as-file dir)
 	  		  dname (.getName d)]
-	  	  (when (str/includes? dname " ") (.renameTo d (as-file (java.io.File. (.getParent d) (replace-spaces dname separator))))))))
+	  	  (when (str/includes? dname " ") (.renameTo d (java.io.File. (.getParent d) (replace-spaces dname separator)))))))
 
     ; now get an updated file list, then rename files; order unimportant
     (let [file-list       (filter #(.isFile (as-file %)) (vec (traverse-dir direc)))
